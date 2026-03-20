@@ -1,29 +1,27 @@
 <!--
   SYNC IMPACT REPORT
   ==================
-  Version Change: 0.0.0 → 1.0.0 (MAJOR - initial constitution establishment)
+  Version Change: 1.1.0 → 2.0.0 (MAJOR - principle removal + redefinition)
 
-  Added Principles:
-  - I. YAGNI (You Aren't Gonna Need It)
-  - II. KISS (Keep It Simple)
-  - III. Minimal Viable Change
-  - IV. Community Alignment
-  - V. API Consistency
-  - VI. Predictable Behavior
-  - VII. Progressive Disclosure
-  - VIII. Cross-Language Parity
-  - IX. Test Coverage
+  Removed Principles:
+  - IV. Community Alignment (process concern, enforced by specledger.io approvals)
 
-  Added Sections:
-  - Core Principles (Design Philosophy)
-  - User Experience Standards
-  - Quality Standards
-  - Governance
+  Merged Principles:
+  - V. API Consistency + VIII. Cross-Language Parity → IV. Cross-Language Consistency
+    (JSII enforces API parity by design; merged to focus on scaffolding/tooling gaps)
+
+  Renumbered Principles:
+  - VI. Predictable Behavior → V. Predictable Behavior
+  - VII. Progressive Disclosure → VI. Progressive Disclosure
+  - IX. Test Coverage → VII. Test Coverage
+  - X. Quickstart-Driven Testing → VIII. Quickstart-Driven Testing
+
+  Added Principles: None (X. Quickstart-Driven Testing was added in v1.1.0)
 
   Templates Requiring Updates:
-  - .specify/templates/plan-template.md: ✅ Compatible (Constitution Check section aligns)
-  - .specify/templates/spec-template.md: ✅ Compatible (User scenarios structure supports principles)
-  - .specify/templates/tasks-template.md: ✅ Compatible (Phase structure supports incremental delivery)
+  - .specledger/templates/plan-template.md: ✅ Updated (v1.1.0, still compatible)
+  - .specledger/templates/spec-template.md: ✅ Compatible
+  - .specledger/templates/tasks-template.md: ✅ Updated (v1.1.0, still compatible)
 
   Deferred Items: None
 -->
@@ -72,35 +70,22 @@ Each PR/change MUST do one thing well. Avoid bundling unrelated improvements.
 
 **Rationale:** Small, focused changes are easier to review, test, and revert if problems arise.
 
-### IV. Community Alignment
-
-Feature specifications MUST be reviewed and approved in collaboration with the community before implementation begins.
-
-**Rules:**
-- Major features require RFC or discussion issue before implementation
-- Breaking changes MUST have a migration path documented
-- Deprecations MUST include timeline and alternatives
-- Community feedback periods MUST be respected before merging significant changes
-- Maintainers MUST respond to community concerns with technical rationale
-
-**Rationale:** CDK Terrain is a community fork; decisions should reflect community needs and consensus.
-
 ## User Experience Standards
 
-### V. API Consistency
+### IV. Cross-Language Consistency
 
-Similar operations MUST have similar interfaces across all supported languages.
+TypeScript is the single source of truth for all library APIs via JSII. Language-specific code (scaffolding templates, post-scaffold hooks, WASM bridges, runtime shims) MUST maintain equivalent behavior across all supported languages.
 
 **Rules:**
-- Method names MUST follow language-specific conventions while preserving semantic meaning
-- Parameter order MUST be consistent: required before optional, context before specifics
-- Return types MUST be predictable: similar operations return similar structures
-- Error types MUST be consistent within a domain
-- Naming patterns established in one area MUST be followed in related areas
+- Library API parity is enforced by JSII; do NOT duplicate or override JSII-generated interfaces
+- Scaffolding templates MUST provide equivalent project structure and developer experience per language
+- Language-specific post-scaffold hooks MUST produce equivalent build/dependency setup
+- WASM bridge changes MUST be tested against all consuming language contexts
+- Language-specific limitations MUST be documented with workarounds
 
-**Rationale:** Consistency reduces learning curve and prevents user errors.
+**Rationale:** Users choose CDK Terrain for multi-language support. JSII guarantees API parity but scaffolding and tooling gaps erode the cross-language promise.
 
-### VI. Predictable Behavior
+### V. Predictable Behavior
 
 No surprises. Users MUST be able to reason about system behavior from documentation and type signatures.
 
@@ -113,7 +98,7 @@ No surprises. Users MUST be able to reason about system behavior from documentat
 
 **Rationale:** Predictable systems build user trust and reduce support burden.
 
-### VII. Progressive Disclosure
+### VI. Progressive Disclosure
 
 Simple use cases require simple code. Advanced features available but not in the way.
 
@@ -126,22 +111,9 @@ Simple use cases require simple code. Advanced features available but not in the
 
 **Rationale:** Low barrier to entry enables adoption; advanced features retain power users.
 
-### VIII. Cross-Language Parity
-
-Features available in one language MUST be available in all supported languages (TypeScript, Python, Go).
-
-**Rules:**
-- New features MUST NOT ship until available in all supported languages
-- Language-specific limitations MUST be documented with workarounds
-- Test coverage MUST be equivalent across all language bindings
-- Examples MUST be provided in all supported languages
-- Performance characteristics SHOULD be comparable across languages
-
-**Rationale:** Users choose CDK Terrain for multi-language support; partial support defeats the purpose.
-
 ## Quality Standards
 
-### IX. Test Coverage
+### VII. Test Coverage
 
 All changes to core libraries require appropriate test coverage.
 
@@ -154,15 +126,27 @@ All changes to core libraries require appropriate test coverage.
 
 **Rationale:** Tests are the specification; untested code is undefined behavior.
 
+### VIII. Quickstart-Driven Testing
+
+The quickstart.md produced during plan Phase 1 is the canonical source of expected user journeys. Every step MUST be directly translatable into an integration test scenario.
+
+**Rules:**
+- Each quickstart.md step MUST map to at least one integration test scenario
+- CLI-facing changes MUST have corresponding integration tests derived from quickstart steps
+- If a quickstart step cannot be automated as a test, it MUST be flagged as NEEDS CLARIFICATION in the spec
+- Integration tests MUST exercise the same commands, flags, and expected outputs documented in quickstart.md
+- Quickstart.md validation is NOT a polish-phase task; it MUST be verified per user-story phase
+
+**Rationale:** Quickstart docs that diverge from tested behavior become misleading. Treating quickstart steps as test cases ensures documentation accuracy, catches CLI regressions, and guarantees that the plan>research output has a verifiable integration contract.
+
 ## Governance
 
 ### Amendment Procedure
 
-1. Propose changes via GitHub Discussion or RFC
-2. Allow minimum 7 days for community feedback on significant changes
-3. Maintainer approval required for all amendments
-4. Migration plan required for any principle that affects existing code
-5. Update all dependent templates and documentation before merging
+1. Propose changes via specledger.io spec approval workflow
+2. Maintainer approval required for all amendments
+3. Migration plan required for any principle that affects existing code
+4. Update all dependent templates and documentation before merging
 
 ### Versioning Policy
 
@@ -187,4 +171,4 @@ When principles conflict, apply in this order:
 
 Explicit override allowed with documented rationale approved by maintainer.
 
-**Version**: 1.0.0 | **Ratified**: 2026-01-14 | **Last Amended**: 2026-01-14
+**Version**: 2.0.0 | **Ratified**: 2026-01-14 | **Last Amended**: 2026-03-20

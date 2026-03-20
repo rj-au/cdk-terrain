@@ -39,6 +39,7 @@ Verify compliance with principles from `.specledger/memory/constitution.md`:
 - [ ] **UX Consistency**: User flows documented in spec.md acceptance scenarios
 - [ ] **Performance**: Metrics defined in Technical Context (response time, throughput, memory)
 - [ ] **Observability**: Logging/metrics strategy documented
+- [ ] **Quickstart-Driven Testing**: Quickstart.md steps map to integration test scenarios (per user-story phase, not deferred to polish)
 - [ ] **Issue Tracking**: Epic created with `sl issue create --type epic` and linked to spec
 
 **Complexity Violations** (if any, justify in Complexity Tracking table below):
